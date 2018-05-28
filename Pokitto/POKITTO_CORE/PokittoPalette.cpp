@@ -54,7 +54,37 @@ Software License Agreement (BSD License)
 
 using namespace Pokitto;
 
+/* */
+void Display::loadRGBPalette(const unsigned char* p) {
+    const int paletteMask = ((~0UL)>>(32-POK_COLORDEPTH));
+    const int paletteSize = paletteMask+1;
+    for (int i=0;i<paletteSize;i++){
+	palette[i] = uint32_t(RGBto565(p[i*3], p[i*3+1],p[i*3+2])) << 3;
+	palette[i+256] = palette[0];
+    }
+    for (int i=paletteSize;i<256;i++){
+	palette[i] = palette[i&paletteMask];
+	palette[i+256] = palette[(i>>POK_COLORDEPTH)&paletteMask];
+    }
+    paletteptr = palette;
+}
 
+void Display::load565Palette(const uint16_t* p) {
+    const int paletteMask = ((~0UL)>>(32-POK_COLORDEPTH));
+    const int paletteSize = paletteMask+1;
+    
+    for (int i=0;i<paletteSize;i++){
+	palette[i] = uint32_t(p[i]) << 3;
+	palette[i+256] = palette[0];
+    }
+    
+    for (int i=paletteSize;i<256;i++){
+	palette[i] = palette[i&paletteMask];
+	palette[i+256] = palette[(i>>POK_COLORDEPTH)&paletteMask];
+    }
+    paletteptr = palette;
+}
+/*/
 void Display::loadRGBPalette(const unsigned char* p) {
     for (int i=0;i<PALSIZE;i++) palette[i] = RGBto565(p[i*3], p[i*3+1],p[i*3+2]);
     paletteptr = palette;
@@ -64,6 +94,7 @@ void Display::load565Palette(const uint16_t* p) {
     for (int i=0;i<PALSIZE;i++) palette[i] = p[i];
     paletteptr = palette;
 }
+/* */
 
 void Display::rotatePalette(int8_t step) {
     uint16_t tpal[PALSIZE];

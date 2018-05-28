@@ -219,9 +219,13 @@ public:
     /** set default palette */
     static void setDefaultPalette();
     /** master palette */
-    static uint16_t palette[PALETTE_SIZE];
+#ifndef POK_SIM
+    static uint32_t *palette;
+#else
+    static uint32_t palette[256];
+#endif
     /** runtime palette pointer */
-    static uint16_t *paletteptr;
+    static uint32_t *paletteptr;
     /** convert RGB to 565 color value */
     static uint16_t RGBto565(uint8_t,uint8_t,uint8_t);
     /** linear interpolation between colors */

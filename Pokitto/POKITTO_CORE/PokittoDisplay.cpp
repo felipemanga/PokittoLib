@@ -119,8 +119,14 @@ int16_t Display::clipY = 0;
 int16_t Display::clipW = LCDWIDTH;
 int16_t Display::clipH = LCDHEIGHT;
 
-uint16_t* Display::paletteptr;
-uint16_t Display::palette[PALETTE_SIZE];
+uint32_t* Display::paletteptr;
+
+#ifndef POK_SIM
+uint32_t* Display::palette = (uint32_t *) 0x20000000;
+#else
+uint32_t Display::palette[256];
+#endif
+
 const unsigned char* Display::font;
 int8_t Display::adjustCharStep = 1;
 int8_t Display::adjustLineStep = 1;

@@ -594,7 +594,13 @@ void Core::setVolLimit() {
 
 void Core::begin() {
 
+   // TO-DO: put this together with whatever
+   // code initializes the other clocks
+   *reinterpret_cast<volatile uint32_t *>(0x40048080) |= 1 << 26;
+
     init(); // original functions
+
+    
     timePerFrame = POK_FRAMEDURATION;
 	//nextFrameMillis = 0;
 	//frameCount = 0;
